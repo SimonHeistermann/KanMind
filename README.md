@@ -48,33 +48,58 @@ git clone https://github.com/bobyang08250772/kanman.git
 cd kanman
 ```
 
-### 2️⃣ Environment Setup
-- Erstelle eine Datei namens .env im Projekt-Root, basierend auf der Vorlage env-template.
-- 🔐 Tipp: Verwende env-template als Vorlage für .env, aber commite deine .env nie in Git.
-
-### 3️⃣ Create and Activate a Virtual Environment
+### 2️⃣ Create and Activate a Virtual Environment
 ```bash
-python -m venv venv
-source venv/bin/activate   # macOS/Linux
+python3 -m venv venv
+source venv/bin/activate # macOS/Linux
 venv\Scripts\activate      # Windows
 ```
 
-### 4️⃣ Install Dependencies
+### 3️⃣ Install Dependencies
 ```bash
 pip install -r requirements.txt
 ```
 
-### 5️⃣ Run Migrations
+### 4️⃣ Environment Setup
+```bash
+cp env-template .env # macOS / Linux
+# or
+copy env-template .env # Windows (Command Prompt)
+```
+🔐 Tip: Never commit your .env file to Git.
+You can safely use the default values for local development.
+Optionally, replace SECRET_KEY or toggle DEBUG.
+
+### 5️⃣ 🔑 Generate your own SECRET_KEY
+Django requires a secret key for cryptographic signing.
+You must generate one manually and add it to your .env file.
+
+Option 1 (recommended):
+```bash
+python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
+```
+Copy the generated key into your .env file:
+```bash
+SECRET_KEY=your-secret-key-here
+```
+
+Option 2:
+If Django isn’t installed yet, use an online generator such as
+👉 https://djecrety.ir/
+
+and paste the result into your .env.
+
+### 6️⃣ Run Migrations
 ```bash
 python manage.py migrate
 ```
 
-### 6️⃣ Create a Superuser
+### 7️⃣ Create a Superuser
 ```bash
 python manage.py createsuperuser
 ```
 
-### 7️⃣ Run the Development Server
+### 8️⃣ Run the Development Server
 ```bash
 python manage.py runserver
 ```
@@ -82,7 +107,7 @@ python manage.py runserver
 --> Open in browser:
 ➡️ http://127.0.0.1:8000/
 
-### 8️⃣ Create Guest User for Guest Login
+### 9️⃣ Create Guest User for Guest Login
 
 Log into the admin page of the project and create a guest user with the following information:
 
