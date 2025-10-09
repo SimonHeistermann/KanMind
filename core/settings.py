@@ -162,6 +162,6 @@ REST_FRAMEWORK = {
 }
 
 AUTHENTICATION_BACKENDS = [
-    "user_auth_app.auth.EmailAuthBackend",  # Pfad ggf. anpassen!
+    "user_auth_app.auth.EmailAuthBackend",  # Change path if necessary
     "django.contrib.auth.backends.ModelBackend",
 ]
