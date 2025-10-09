@@ -80,7 +80,7 @@ python -c "from django.core.management.utils import get_random_secret_key; print
 ```
 Copy the generated key into your .env file:
 ```bash
-SECRET_KEY=your-secret-key-here
+SECRET_KEY='your-secret-key-here'
 ```
 
 Option 2:
