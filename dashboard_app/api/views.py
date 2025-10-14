@@ -128,3 +128,4 @@ class TaskCommentDestroyView(generics.DestroyAPIView):
     """Delete a specific task comment."""
     permission_classes = [IsAuthenticatedAndSelf]
     queryset = Comment.objects.all()
+    serializer_class = TaskCommentSerializer
