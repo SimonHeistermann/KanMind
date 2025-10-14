@@ -60,8 +60,6 @@ class BoardDetailView(generics.RetrieveUpdateDestroyAPIView):
             }, 
             status=status.HTTP_200_OK)
 
-
-
 class TaskListView(generics.ListCreateAPIView):
     """List all tasks or create a new one."""
     permission_classes = [IsAuthenticatedAndBoardMember]
@@ -70,28 +68,16 @@ class TaskListView(generics.ListCreateAPIView):
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
-        if not serializer.is_valid():
-            return  Response({'Error': 'Invalid Valud'}, status=status.HTTP_400_BAD_REQUEST)
+        serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def perform_create(self, serializer):
-        board_id = self.request.data.get('board')
-        if not board_id:
-            raise NotFound("Board ID is required.")
-
-        try:
-            board = Board.objects.get(id=board_id)
-        except Board.DoesNotExist:
-            raise NotFound("Board not found.")
-
+        board = serializer.validated_data['board']
         user = self.request.user
-        print(user)
         if not user.is_superuser and user not in board.members.all():
             raise PermissionDenied("You are not a member of this board.")
-
         serializer.save(creator=user)
-    
 
 class TaskListAssignToMeView(generics.ListAPIView):
     """List tasks assigned to the current user."""
@@ -102,7 +88,6 @@ class TaskListAssignToMeView(generics.ListAPIView):
         user = self.request.user
         return Task.objects.filter(assignee=user)
 
-
 class TaskListReviewingMeView(generics.ListAPIView):
     """List tasks where the current user is the reviewer."""
     permission_classes = [IsAuthenticatedAndRevieingOrSuperUser]
@@ -112,14 +97,11 @@ class TaskListReviewingMeView(generics.ListAPIView):
         user = self.request.user
         return Task.objects.filter(reviewer=user)
 
-
 class TaskDetailView(generics.RetrieveUpdateDestroyAPIView):
     """Retrieve, update, or delete a task."""
     permission_classes = [IsAuthenticatedAndTaskRelatedOrSuperUser]
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
-
-
 
 class TaskCommentListView(generics.ListCreateAPIView):
     """List or create comments for a specific task."""
@@ -142,9 +124,7 @@ class TaskCommentListView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         serializer.save()
 
-
 class TaskCommentDestroyView(generics.DestroyAPIView):
     """Delete a specific task comment."""
     permission_classes = [IsAuthenticatedAndSelf]
     queryset = Comment.objects.all()
-    serializer_class = TaskCommentSerializer
